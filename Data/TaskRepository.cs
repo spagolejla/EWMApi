@@ -33,7 +33,7 @@ namespace EWMApi.Data
             try
             {
                 return await _context.Tasks
-                                .Find(task => task.Id == id)
+                                .Find(task => task.Id.ToString() == id)
                                 .FirstOrDefaultAsync();
             }
             catch (Exception ex)
@@ -46,7 +46,10 @@ namespace EWMApi.Data
         {
             try
             {
-                 await _context.Tasks.InsertOneAsync(task);
+                var latestNo = _context.Tasks.Find(_ => true).ToList().OrderByDescending(task=>task.TaskNo).Select(task => task.TaskNo).Take(1).First();
+                task.Id = (Guid.NewGuid()).ToString();
+                task.TaskNo = latestNo + 1;
+                await _context.Tasks.InsertOneAsync(task);
             }
             catch (Exception ex)
             {
@@ -112,5 +115,12 @@ namespace EWMApi.Data
             }
         }
 
+        private ObjectId GetInternalId(string id)
+        {
+            if (!ObjectId.TryParse(id, out ObjectId internalId))
+                internalId = ObjectId.Empty;
+
+            return internalId;
+        }
     }
 }

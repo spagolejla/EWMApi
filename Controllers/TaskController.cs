@@ -35,10 +35,10 @@ namespace EWMApi.Controllers
             _taskRepository.Post(newItem);
         }
 
-        [HttpPut("{id}")]
-        public void Put(string id, [FromBody] Task task)
+        [HttpPut()]
+        public void Put([FromBody] Task task)
         {
-            _taskRepository.Update(id, task);
+            _taskRepository.Update(task.Id.ToString(), task);
         }
 
         [HttpDelete("{id}")]
