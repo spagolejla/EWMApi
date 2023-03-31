@@ -23,5 +23,21 @@ namespace EWMApi.Data
                 return _database.GetCollection<Task>("task");
             }
         }
+
+        public IMongoCollection<Project> Projects
+        {
+            get
+            {
+                return _database.GetCollection<Project>("project");
+            }
+        }
+
+        public IMongoCollection<Employee> Employees
+        {
+            get
+            {
+                return _database.GetCollection<Employee>("employee");
+            }
+        }
     }
 }

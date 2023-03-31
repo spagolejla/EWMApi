@@ -15,6 +15,10 @@ builder.Services.Configure<Settings>(
     builder.Configuration.GetSection("MongoConnection"));
 
 builder.Services.AddTransient<ITaskRepository, TaskRepository>();
+builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
+builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+
+
 
 builder.Services.AddCors(options =>
 {
