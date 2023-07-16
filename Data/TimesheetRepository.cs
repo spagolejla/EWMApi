@@ -132,5 +132,23 @@ namespace EWMApi.Data
                 throw ex;
             }
         }
+
+        public async Task<Timesheet> GetUserTimesheetByDate(DateTime date, string userId)
+        {
+            try
+            {
+                return await _context.Timesheets
+                                .Find(timesheet => (timesheet.Date.Day == date.Date.Day)
+                                && (timesheet.Date.Month == date.Date.Month)
+                                && (timesheet.Date.Year == date.Date.Year)
+                                && (timesheet.User.Id == userId))
+                                .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

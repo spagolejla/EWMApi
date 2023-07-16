@@ -34,6 +34,19 @@ namespace EWMApi.Controllers
             return await _timesheetRepository.GetByDate(date);
         }
 
+        [HttpGet("getUserTimesheetByDate/{date}/{userId}")]
+        public async Task<Timesheet> GetUserTimesheetByDate(DateTime date, string userId)
+        {
+            return await _timesheetRepository.GetUserTimesheetByDate(date, userId);
+        }
+
+        [HttpGet("getTimesheetByDate")]
+        public async Task<Timesheet> GetTimesheetByDate([FromQuery(Name = "date")] DateTime date)
+        {
+            var userId = "00ee6e49-dd17-41a2-be30-14a2d8d5c7dd"; // TODO: Change to logged in user
+            return await _timesheetRepository.GetUserTimesheetByDate(date, userId);
+        }
+
         [HttpPost]
         public void Post([FromBody] Timesheet newItem)
         {

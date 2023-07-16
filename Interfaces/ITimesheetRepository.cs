@@ -10,6 +10,8 @@ namespace EWMApi.Interfaces
 
         Task<IEnumerable<Timesheet>> GetByDate(DateTime date);
 
+        Task<Timesheet> GetUserTimesheetByDate(DateTime date, string userId);
+
         System.Threading.Tasks.Task Post(Timesheet item);
 
         Task<bool> Update(string id, Timesheet item);

@@ -8,7 +8,7 @@
 
         public DateTime? End { get; set; }
 
-        public double? TotakHours { get; set; }
+        public double? TotalHours { get; set; }
 
         public Task Task { get; set; }
 

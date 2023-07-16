@@ -1,4 +1,5 @@
-﻿using Task = EWMApi.Model.Task;
+﻿using EWMApi.Model;
+using Task = EWMApi.Model.Task;
 
 namespace EWMApi.Interfaces
 {
@@ -7,6 +8,12 @@ namespace EWMApi.Interfaces
         Task<IEnumerable<Task>> GetAll();
 
         Task<Task> Get(string id);
+
+        Task<Task> GetActiveTask(string id);
+
+        Task<IEnumerable<Task>> GetByProjectId(string projectId);
+
+        Task<IEnumerable<Task>> GetByUserId(string userId);
 
         System.Threading.Tasks.Task Post(Task taks);
 

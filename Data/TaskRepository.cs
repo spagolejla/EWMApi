@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Task = EWMApi.Model.Task;
+using TaskStatus = EWMApi.Model.Enums.TaskStatus;
 
 namespace EWMApi.Data
 {
@@ -35,6 +36,44 @@ namespace EWMApi.Data
                 return await _context.Tasks
                                 .Find(task => task.Id.ToString() == id)
                                 .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<Task> GetActiveTask(string id)
+        {
+            try
+            {
+                return await _context.Tasks
+                                .Find(task => task.Status == TaskStatus.InProgress && task.Assigner != null && task.Assigner.Id == id)
+                                .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<IEnumerable<Task>> GetByProjectId(string projectId)
+        {
+            try
+            {
+                return await _context.Tasks.Find(task => task.Project.Id == projectId).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<IEnumerable<Task>> GetByUserId(string userId)
+        {
+            try
+            {
+                return await _context.Tasks.Find(task => task.Assigner.Id == userId).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -122,5 +161,7 @@ namespace EWMApi.Data
 
             return internalId;
         }
+
+      
     }
 }

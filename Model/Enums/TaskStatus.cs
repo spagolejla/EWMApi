@@ -4,8 +4,8 @@
     {
         Undefined,
         Created,
-        Open,
-        Closed,
+        InProgress,
+        Stopped,
         Finished
     }
 }
