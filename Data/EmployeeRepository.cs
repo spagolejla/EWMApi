@@ -1,8 +1,12 @@
 ﻿using EWMApi.Interfaces;
 using EWMApi.Model;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace EWMApi.Data
 {
@@ -33,6 +37,21 @@ namespace EWMApi.Data
             {
                 return await _context.Employees
                                 .Find(employee => employee.Id.ToString() == id)
+                                .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public async Task<Employee> GetByEmail(string email)
+        {
+            try
+            {
+                return await _context.Employees
+                                .Find(employee => employee.Email.ToString() == email)
                                 .FirstOrDefaultAsync();
             }
             catch (Exception ex)
@@ -114,6 +133,39 @@ namespace EWMApi.Data
             {
                 throw ex;
             }
+        }
+
+        public async Task<string> Authenticate(string email, string password)
+        {
+            var user = await _context.Employees
+                                .Find(employee => employee.Email.ToString() == email && employee.Password.ToString() == password)
+                                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var tokenKey = Encoding.ASCII.GetBytes("somekeyinheresomekeyinherekeyherekeyhere");
+
+            var tokenDescriptor = new SecurityTokenDescriptor()
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Email, email),
+                }),
+                Expires = DateTime.UtcNow.AddHours(1),
+
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(tokenKey),
+                    SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
         }
 
         private ObjectId GetInternalId(string id)

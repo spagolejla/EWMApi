@@ -1,12 +1,14 @@
 ﻿using EWMApi.Interfaces;
 using EWMApi.Model;
 using EWMApi.Model.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Task = EWMApi.Model.Task;
 
 namespace EWMApi.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
