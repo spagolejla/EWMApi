@@ -1,4 +1,5 @@
-﻿using EWMApi.Interfaces;
+﻿using EWMApi.Data;
+using EWMApi.Interfaces;
 using EWMApi.Model;
 using EWMApi.Model.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,6 @@ using Task = EWMApi.Model.Task;
 
 namespace EWMApi.Controllers
 {
-    [Authorize]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
@@ -16,12 +16,16 @@ namespace EWMApi.Controllers
     {
         private readonly ITaskRepository _taskRepository;
         private readonly ITimesheetRepository _timesheetRepository;
+        private readonly IProjectRepository _projectRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
 
-        public TaskController(ITaskRepository taskRepository, ITimesheetRepository timesheetRepository)
+        public TaskController(ITaskRepository taskRepository, ITimesheetRepository timesheetRepository, IProjectRepository projectRepository, IEmployeeRepository employeeRepository)
         {
             _taskRepository = taskRepository;
             _timesheetRepository = timesheetRepository;
+            _projectRepository = projectRepository;
+            _employeeRepository = employeeRepository;
         }
 
         [HttpGet]
@@ -52,6 +56,26 @@ namespace EWMApi.Controllers
         public async Task<IEnumerable<Task>> GetByUserId(string id)
         {
             return await _taskRepository.GetByUserId(id);
+        }
+
+        [HttpGet("dashboard-data")]
+        public async Task<DashboardData> GetDashboardData()
+        {
+            var tasks = await _taskRepository.GetAll();
+            var projects = await _projectRepository.GetAll();
+            var employees = await _employeeRepository.GetAll();
+
+            var dashboardData = new DashboardData()
+            {
+                NumberOfTasks = tasks.Count(),
+                NumberOfActiveTasks = tasks.Count(x => x.Status == EWMApi.Model.Enums.TaskStatus.InProgress),
+                NumberOfProjects = projects.Count(),
+                NumberOfOpenProjects = projects.Count(x => x.Status == Model.Enums.ProjectStatus.Open),
+                NumberOfEmployees = employees.Count(),
+                NumberOfActiveEmployees = employees.Count(x => x.Active == true)
+            };
+
+            return dashboardData;
         }
 
         [HttpPost]

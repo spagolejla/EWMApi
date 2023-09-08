@@ -12,6 +12,8 @@ namespace EWMApi.Interfaces
 
         Task<Timesheet> GetUserTimesheetByDate(DateTime date, string userId);
 
+        Task<IEnumerable<Timesheet>> GetByUser(string userId);
+
         System.Threading.Tasks.Task Post(Timesheet item);
 
         Task<bool> Update(string id, Timesheet item);

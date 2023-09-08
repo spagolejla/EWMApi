@@ -33,7 +33,7 @@ namespace EWMApi.Controllers
             return Ok(new { token, loggedUser });
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IEnumerable<Employee>> Get()
         {
@@ -49,28 +49,28 @@ namespace EWMApi.Controllers
             }
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<Employee> Get(string id)
         {
             return await _employeeRepository.Get(id);
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpPost]
         public void Post([FromBody] Employee newItem)
         {
             _employeeRepository.Post(newItem);
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpPut()]
         public void Put([FromBody] Employee item)
         {
             _employeeRepository.Update(item.Id.ToString(), item);
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpDelete("{id}")]
         public void Delete(string id)
         {

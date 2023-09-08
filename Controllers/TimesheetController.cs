@@ -22,7 +22,7 @@ namespace EWMApi.Controllers
             return await _timesheetRepository.GetAll();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("getById/{id}")]
         public async Task<Timesheet> Get(string id)
         {
             return await _timesheetRepository.Get(id);
@@ -34,8 +34,8 @@ namespace EWMApi.Controllers
             return await _timesheetRepository.GetByDate(date);
         }
 
-        [HttpGet("getUserTimesheetByDate/{date}/{userId}")]
-        public async Task<Timesheet> GetUserTimesheetByDate(DateTime date, string userId)
+        [HttpGet("getUserTimesheetByDate")]
+        public async Task<Timesheet> GetUserTimesheetByDate([FromQuery(Name = "date")] DateTime date, [FromQuery(Name = "userId")] string userId)
         {
             return await _timesheetRepository.GetUserTimesheetByDate(date, userId);
         }
@@ -45,6 +45,12 @@ namespace EWMApi.Controllers
         {
             var userId = "00ee6e49-dd17-41a2-be30-14a2d8d5c7dd"; // TODO: Change to logged in user
             return await _timesheetRepository.GetUserTimesheetByDate(date, userId);
+        }
+
+        [HttpGet("getByUser")]
+        public async Task<IEnumerable<Timesheet>> GetByUser([FromQuery(Name = "userId")] string userId)
+        {
+            return await _timesheetRepository.GetByUser(userId);
         }
 
         [HttpPost]

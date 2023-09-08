@@ -85,9 +85,17 @@ namespace EWMApi.Data
         {
             try
             {
-                var latestNo = _context.Tasks.Find(_ => true).ToList().OrderByDescending(task=>task.TaskNo).Select(task => task.TaskNo).Take(1).First();
+                var latestNo = _context.Tasks.Find(_ => true).ToList().OrderByDescending(task=>task.TaskNo).Select(task => task.TaskNo).Take(1).FirstOrDefault();
                 task.Id = (Guid.NewGuid()).ToString();
-                task.TaskNo = latestNo + 1;
+                if (latestNo != null)
+                {
+                    task.TaskNo = latestNo + 1;
+
+                }
+                else
+                {
+                    task.TaskNo = 1;
+                }
                 await _context.Tasks.InsertOneAsync(task);
             }
             catch (Exception ex)

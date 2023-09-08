@@ -133,6 +133,20 @@ namespace EWMApi.Data
             }
         }
 
+        public async Task<IEnumerable<Timesheet>> GetByUser(string userId)
+        {
+            try
+            {
+                return await _context.Timesheets
+                                .Find(timesheet => (timesheet.User.Id == userId))
+                                .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<Timesheet> GetUserTimesheetByDate(DateTime date, string userId)
         {
             try
