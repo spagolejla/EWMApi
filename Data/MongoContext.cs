@@ -47,5 +47,13 @@ namespace EWMApi.Data
                 return _database.GetCollection<Timesheet>("timesheets");
             }
         }
+
+        public IMongoCollection<Invoice> Invoices
+        {
+            get
+            {
+                return _database.GetCollection<Invoice>("invoices");
+            }
+        }
     }
 }

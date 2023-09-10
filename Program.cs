@@ -82,7 +82,7 @@ builder.Services.AddTransient<ITaskRepository, TaskRepository>();
 builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
 builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddTransient<ITimesheetRepository, TimesheetRepository>();
-
+builder.Services.AddTransient<IInvoiceRepository, InvoiceRepository>();
 
 
 builder.Services.AddCors(options =>
