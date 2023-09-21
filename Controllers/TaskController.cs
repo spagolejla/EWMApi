@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Task = EWMApi.Model.Task;
+using TaskStatus = EWMApi.Model.Enums.TaskStatus;
 
 namespace EWMApi.Controllers
 {
@@ -76,6 +77,48 @@ namespace EWMApi.Controllers
             };
 
             return dashboardData;
+        }
+
+        [HttpGet("task-per-project-report")]
+        public async Task<List<TaskPerProjectReportData>> GetTaskPerProjectReportData()
+        {
+            var tasks = await _taskRepository.GetAll();
+
+            var tasksPerProjectReportData = new List<TaskPerProjectReportData>();
+
+            if (tasks != null)
+            {
+                tasksPerProjectReportData = tasks.GroupBy(task => task.Project.Name.ToLowerInvariant()).Select(group => new TaskPerProjectReportData
+                {
+                    ProjectId = "",
+                    ProjectName = group?.Key != null ? group.First().Project.Name : "",
+                    NumberOfTasks = group != null ? group.Count() : 0
+                }).ToList();
+
+            }
+
+            return tasksPerProjectReportData;
+        }
+
+        [HttpGet("progress-on-project-report")]
+        public async Task<List<ProgressOnProjectReportData>> GetProgressOnProjectReportData()
+        {
+            var tasks = await _taskRepository.GetAll();
+
+            var progressOnProjectReportData = new List<ProgressOnProjectReportData>();
+
+            if (tasks != null)
+            {
+                progressOnProjectReportData = tasks.GroupBy(task => task.Project?.Name.ToLowerInvariant()).Select(group => new ProgressOnProjectReportData
+                {
+                    Name = group?.Key != null ? group.First()?.Project?.Name : "",
+                    FinishedTasks = group != null ? group.Where(x => x.Status == TaskStatus.Finished).Count() : 0,
+                    UnfinishedTasks = group != null ? group.Count(x => x.Status != TaskStatus.Finished) : 0,
+                }).ToList();
+
+            }
+
+            return progressOnProjectReportData;
         }
 
         [HttpPost]
